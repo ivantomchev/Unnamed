@@ -2,6 +2,7 @@
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -37,7 +38,7 @@
         }
 
         [TestMethod, TestCategory("BooksService")]
-        public void CanAddBook()
+        public void AddBook_ShouldIncreseBooks()
         {
             var booksService = new BooksService(mockedBooksRepository, mockedLogger);
 
@@ -49,7 +50,15 @@
         }
 
         [TestMethod, TestCategory("BooksService")]
-        public void CanGetBookById()
+        public void AddBook_ShouldThrowArgumentNullException_IfInputIsNull()
+        {
+            var booksService = new BooksService(mockedBooksRepository, mockedLogger);
+
+            Assert.ThrowsException<ArgumentNullException>(() => booksService.Add(null));
+        }
+
+        [TestMethod, TestCategory("BooksService")]
+        public void BookById_ShouldReturnCorrectBook()
         {
             var booksService = new BooksService(mockedBooksRepository, mockedLogger);
 
@@ -62,7 +71,19 @@
         }
 
         [TestMethod, TestCategory("BooksService")]
-        public void CanGetBooksByAuthorName()
+        public void BookById_ShouldReturnNull_IfBookDoesNotExist()
+        {
+            var booksService = new BooksService(mockedBooksRepository, mockedLogger);
+
+            var bookId = 100;
+
+            var result = booksService.GetById(bookId);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod, TestCategory("BooksService")]
+        public void GetBooksByAuthorName_ShouldReturnCorrectResult()
         {
             var booksService = new BooksService(mockedBooksRepository, mockedLogger);
 
@@ -77,7 +98,19 @@
         }
 
         [TestMethod, TestCategory("BooksService")]
-        public void CanGetAllBooks()
+        public void GetBooksByAuthorName_ShouldReturnZeroBooks_IfAuthorDoesNotExist()
+        {
+            var booksService = new BooksService(mockedBooksRepository, mockedLogger);
+
+            var excpectedAuthorName = "Unknown";
+
+            var result = booksService.GetAllByAuthorName(excpectedAuthorName);
+
+            Assert.AreEqual(0, result.Count());
+        }
+
+        [TestMethod, TestCategory("BooksService")]
+        public void GetAllBooks_ShouldReturnCorrectCount()
         {
             var booksService = new BooksService(mockedBooksRepository, mockedLogger);
 

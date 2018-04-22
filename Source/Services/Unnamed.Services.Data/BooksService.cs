@@ -21,6 +21,10 @@
 
         public Book Add(Book book)
         {
+            if (book == null)
+            {
+                throw new ArgumentNullException("Book");
+            }
             var result = this.booksRepository.Add(book);
             this.booksRepository.SaveChanges();
 
